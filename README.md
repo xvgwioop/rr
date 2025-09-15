@@ -152,7 +152,7 @@
   </div>
 </div>
 
-<div class="center-container hidden" id="imageContainer">
+<div class="center-container" id="imageContainer">
   <!-- กล่องแสดงรูป -->
   <div class="login-box" id="imageBox">
     <h2>Hi na hub you!! 🌸</h2>
@@ -191,55 +191,46 @@
   ];
 
   function login() {
-    const usernameInput = document.getElementById('username').value.trim().toLowerCase();
-    const passwordInput = document.getElementById('password').value.trim();
+  const usernameInput = document.getElementById('username').value.trim();
+  const passwordInput = document.getElementById('password').value.trim();
 
-    // ค้นหาผู้ใช้จากรายการ
-    const user = users.find(u => u.username.toLowerCase() === usernameInput && u.password === passwordInput);
+  // ค้นหาผู้ใช้จากรายการ (รองรับตัวพิมพ์เล็ก/ใหญ่)
+  const user = users.find(u =>
+    u.username.toLowerCase() === usernameInput.toLowerCase() &&
+    u.password === passwordInput
+  );
 
-    if (user) {
-  const loginBox = document.getElementById('loginForm');
-  
-  // ใส่คลาสเพื่อให้เลื่อนไปทางซ้าย
-  loginBox.classList.add('slide-out');
+  if (user) {
+    const loginBox = document.getElementById('loginForm');
+    loginBox.classList.add('slide-out');
 
-  // รอให้ animation เสร็จแล้วค่อยเปลี่ยนหน้า
-  setTimeout(() => {
-  document.getElementById('loginContainer').style.display = 'none';
+    setTimeout(() => {
+      document.getElementById('loginContainer').style.display = 'none';
+      const imageContainer = document.getElementById('imageContainer');
+      imageContainer.style.display = 'flex';
 
-  const imageContainer = document.getElementById('imageContainer');
-  imageContainer.style.display = 'flex';
+      setTimeout(() => {
+        imageContainer.classList.add('show');
+      }, 50);
 
-  // ดีเลย์เล็กน้อยเพื่อให้ transition ทำงาน
-  setTimeout(() => {
-    imageContainer.classList.add('show');
-  }, 50);
-
-  document.getElementById('bottomRightBox').style.display = 'none';
-
-
-    // เปลี่ยนพื้นหลังและข้อความ
-    const body = document.getElementById('pageBody');
-    body.style.backgroundImage = `url('${user.background}')`;
-    body.style.backgroundRepeat = "no-repeat";
-    body.style.backgroundSize = "cover";
-    body.style.backgroundPosition = "center";
-
-    const imageBox = document.getElementById('imageBox');
-    imageBox.querySelector('h2').textContent = user.greeting;
-
-    // เปลี่ยนรูปภาพตามผู้ใช้
-    imageBox.querySelector('img').src = user.image;
-
-  }, 800); // ต้องตรงกับเวลา transition (0.8s)
-}
-
-      // **ซ่อนกล่องมุมขวาล่าง**
+      // ซ่อน bottomRightBox หลังจาก login สำเร็จ
       document.getElementById('bottomRightBox').classList.add('hidden-bottom');
 
-    } else {
-      // แสดงกล่องแจ้งเตือน
-      document.getElementById('errorBox').classList.remove('hidden');
+      // เปลี่ยนพื้นหลัง
+      const body = document.getElementById('pageBody');
+      body.style.backgroundImage = `url('${user.background}')`;
+      body.style.backgroundRepeat = "no-repeat";
+      body.style.backgroundSize = "cover";
+      body.style.backgroundPosition = "center";
+
+      const imageBox = document.getElementById('imageBox');
+      imageBox.querySelector('h2').textContent = user.greeting;
+      imageBox.querySelector('img').src = user.image;
+    }, 800);
+
+  } else {
+    // แสดงกล่องแจ้งเตือน ❌
+    document.getElementById('errorBox').classList.remove('hidden');
     }
   }
 
